@@ -12,7 +12,7 @@ app.get('/qq',function(req,res){
     res.status(200).send('Que tal mi joanna')
 });
 
-var mensajes = [{
+var messages = [{
     id : 1,
     text: 'Buenas, este es el Whatsapp de pobres.',
     nickname: 'ChatBot'
@@ -21,7 +21,13 @@ var mensajes = [{
 io.on('connection', function(socket){
     console.log("El equipo: " + socket.handshake.address + " se ha conectado");
     //envia el mensaje al cliente
-    socket.emit('mensajes', mensajes);
+    socket.emit('messages', messages);
+
+    socket.on('add-message',function(data){
+        messages.push(data);
+        io.sockets.emit('messages',messages);
+    });
+
 });
 
 server.listen(6677, function(){
